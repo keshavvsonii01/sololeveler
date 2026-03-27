@@ -1,26 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Root Theme */
+html, body {
+  background-color: #131314; /* surface */
+  color: #ffffff; /* on-surface */
+  font-family: 'Manrope', sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Button Base */
+button {
+  transition: all 0.2s;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Input Base */
+input, textarea, select {
+  background: transparent;
+  color: #ffffff;
+  font-family: 'Manrope', sans-serif;
+  outline: none;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-bottom-color: #00F2FF;
+  box-shadow: 0 0 12px rgba(0, 242, 255, 0.3);
+}
+
+input::placeholder {
+  color: #a8a8a8;
+}
+
+/* Utility Classes */
+.surface-card {
+  background-color: #1c1b1c;
+  border-radius: 0;
+}
+
+.surface-card-elevated {
+  background-color: #353436;
+  border-radius: 0;
+}
+
+.glass-panel {
+  background-color: rgba(28, 27, 28, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 0;
+  border: 1px solid rgba(58, 58, 58, 0.15);
+}
+
+.bloom-glow {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4), 0 0 40px rgba(119, 1, 208, 0.2);
+}
+
+.bloom-glow-lg {
+  box-shadow: 0 0 40px rgba(0, 242, 255, 0.6);
+}
+
+.bloom-glow-xl {
+  box-shadow: 0 0 60px rgba(0, 242, 255, 0.8);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(119, 1, 208, 0.4);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #131314;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #353436;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00F2FF;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+/* Selection */
+::selection {
+  background-color: #00F2FF;
+  color: #00363a;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes slide-in-top {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes slide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-in-top {
+  animation: slide-in-top 0.3s ease-out;
+}
+
+.animate-slide-in-bottom {
+  animation: slide-in-bottom 0.3s ease-out;
+}
+
+/* Grid Background */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
