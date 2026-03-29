@@ -46,7 +46,7 @@ export default function Home() {
             <p className="font-functional text-body-lg text-on-surface-variant mb-8 leading-relaxed">
               Track every workout. Earn XP. Climb ranks from E-Rank to S-Rank supremacy. Transform your fitness journey into an epic solo leveling adventure.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col items-center sm:flex-row gap-4">
               <Link href="/register">
                 <Button variant="primary" size="lg">
                   Start Your Journey

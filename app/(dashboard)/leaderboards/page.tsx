@@ -103,7 +103,7 @@ export default function LeaderboardsPage() {
     <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Header */}
       <div className="mb-12">
-        <h1 className="font-system text-display-md text-primary mb-2">
+        <h1 className="font-system mb-2">
           {getRankLabel(leaderboardType)}
         </h1>
         <p className="text-on-surface-variant font-functional text-body-md">
@@ -135,7 +135,7 @@ export default function LeaderboardsPage() {
         </Button>
 
         {/* Rank Filter */}
-        <div className="ml-auto flex gap-2">
+        <div className="m-auto sm:m-0 sm:ml-auto flex gap-2">
           {['S', 'A', 'B', 'C', 'D', 'E'].map((rank) => (
             <button
               key={rank}
@@ -322,7 +322,7 @@ export default function LeaderboardsPage() {
 
       {/* Info Footer */}
       <div className="mt-12 surface-card p-8">
-        <h2 className="font-system text-title-lg text-on-surface mb-6">HOW_RANKINGS_WORK</h2>
+        <h2 className="font-system text-2xl mb-6">HOW_RANKINGS_WORK</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-body-sm text-on-surface-variant font-functional">
           <div>
             <p className="font-system text-title-sm text-on-surface mb-2">🌍 Global Leaderboard</p>

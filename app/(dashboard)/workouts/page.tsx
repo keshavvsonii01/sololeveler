@@ -83,7 +83,7 @@ export default function WorkoutsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-6 mb-12">
         <div>
           <h1 className="font-system text-display-md text-primary mb-2">WORKOUT_HISTORY</h1>
           <p className="text-on-surface-variant font-functional text-body-md">

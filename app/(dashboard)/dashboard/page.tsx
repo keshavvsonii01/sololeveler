@@ -61,8 +61,8 @@ export default function DashboardPage() {
       {/* Welcome Section with Rank Badge */}
       <div className="surface-card p-8 mb-12">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <div className="flex-1">
-            <h1 className="font-system text-display-md text-primary mb-4">
+          <div className="flex-1 flex flex-col items-center">
+            <h1 className="font-system mb-4">
               LEVEL UP YOUR REALITY
             </h1>
             <p className="text-on-surface-variant font-functional text-body-md mb-6">
@@ -143,7 +143,7 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div className="surface-card p-8 mb-12">
-        <h2 className="font-system text-title-lg text-on-surface mb-6">QUICK_ACTIONS</h2>
+        <h2 className="font-system text-center mb-6">QUICK_ACTIONS</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link href="/workouts/new">
             <Button variant="primary" size="md" className="w-full">

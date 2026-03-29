@@ -160,7 +160,15 @@ export default function ProfilePage() {
                 onChange={handleChange}
                 disabled={isSaving}
               />
-
+              <div>
+                <label className="block text-label-md text-on-surface-variant mb-2 uppercase tracking-wider">
+                  Profile Picture
+                </label>
+                {/* profile picture upload functionality */}
+                <p className="text-on-surface-variant text-label-sm mt-1">
+                  (Profile picture upload coming soon)
+                </p>
+              </div>
               <div>
                 <label className="block text-label-md text-on-surface-variant mb-2 uppercase tracking-wider">
                   Bio
