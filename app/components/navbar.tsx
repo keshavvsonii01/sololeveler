@@ -1,24 +1,72 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
-import { Session } from 'next-auth';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
 interface NavbarProps {
   session: Session | null;
 }
+interface ProgressionData {
+  progression: unknown;
+  currentRankConfig: unknown;
+  allRanks: unknown[];
+}
 
 export const Navbar: React.FC<NavbarProps> = ({ session }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [progressionData, setProgressionData] =
+    useState<ProgressionData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/user/progression");
+        if (!response.ok) throw new Error("Failed to fetch progression");
+        const data = await response.json();
+        setProgressionData(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (session?.user) {
+      fetchData();
+    }
+  }, [session]);
+  const prog = progressionData?.progression as
+    | { [key: string]: any }
+    | undefined;
 
   return (
     <nav className="relative top-0 left-0 right-0 bg-brown border-b border-outline-variant border-opacity-15 z-100">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo/Brand */}
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="font-system text-title-md text-primary">SHADOW_HUD</span>
+          <span className="font-system text-title-md text-primary">
+            SHADOW_HUD
+          </span>
         </Link>
+        <span className="font-system text-title-md text-primary">
+          Rank: {prog?.currentRank || "N/A"}
+        </span>
+        {prog && (
+          <div className="hidden md:block">
+            <div />
+            <span>
+              {prog.currentXP} / {prog.xpToNextRank} XP
+            </span>
+          </div>
+        )}
 
         {/* Navigation Links - Desktop */}
         <div className="hidden md:flex gap-8 items-center">
@@ -75,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ session }) => {
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
-                      signOut({ callbackUrl: '/' });
+                      signOut({ callbackUrl: "/" });
                     }}
                     className="w-full text-left px-4 py-2 text-error hover:bg-surface font-functional text-body-sm"
                   >

@@ -60,7 +60,7 @@ export default function DashboardPage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Welcome Section with Rank Badge */}
       <div className="surface-card p-8 mb-12">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <div className="flex flex-col md:flex-row  md:items-center justify-between gap-8">
           <div className="flex-1 flex flex-col items-center">
             <h1 className="font-system mb-4">
               LEVEL UP YOUR REALITY
@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
           {/* Rank Badge */}
           {rankConfig && (
-            <div className="flex flex-col items-center">
+            <div className="flex-1 flex flex-col items-center">
               <RankBadge
                 rank={prog?.currentRank}
                 size="xl"
