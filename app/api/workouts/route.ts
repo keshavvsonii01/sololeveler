@@ -1,23 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { connectDB } from '@/lib/db';
-import { Workout } from '../../models/workout';
-import { Progression } from '@/models/progression';
-import { UserExerciseStats } from '../../models/userexercisestats';
-import { ExerciseTemplate } from '../../models/exerciseTemplate';
-import { RankConfig } from '@/models/rankConfig';
-import { getRankByXP } from '../../lib/xp-calculator';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../lib/auth";
+import { connectDB } from "../../lib/db";
+import { Workout } from "../../models/workout";
+import { Progression } from "../../models/progression";
+import { UserExerciseStats } from "../../models/userexercisestats";
+import { ExerciseTemplate } from "../../models/exercisetemplate";
+import { RankConfig } from "../../models/rankconfig";
+import { getRankByXP } from "../../lib/xp-calculator";
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { exercises, date, notes, mood } = await req.json();
@@ -25,15 +22,15 @@ export async function POST(req: NextRequest) {
     // Validation
     if (!exercises || !Array.isArray(exercises) || exercises.length === 0) {
       return NextResponse.json(
-        { error: 'At least one exercise is required' },
-        { status: 400 }
+        { error: "At least one exercise is required" },
+        { status: 400 },
       );
     }
 
     if (!date) {
       return NextResponse.json(
-        { error: 'Workout date is required' },
-        { status: 400 }
+        { error: "Workout date is required" },
+        { status: 400 },
       );
     }
 
@@ -41,10 +38,12 @@ export async function POST(req: NextRequest) {
 
     // Fetch exercises to get their XP values
     const exerciseIds = exercises.map((ex: any) => ex.exerciseId);
-    const exerciseTemplates = await ExerciseTemplate.find({ _id: { $in: exerciseIds } });
+    const exerciseTemplates = await ExerciseTemplate.find({
+      _id: { $in: exerciseIds },
+    });
 
     const exerciseMap = new Map(
-      exerciseTemplates.map((ex) => [ex._id.toString(), ex])
+      exerciseTemplates.map((ex) => [ex._id.toString(), ex]),
     );
 
     // Calculate total XP and prepare workout exercises
@@ -57,12 +56,15 @@ export async function POST(req: NextRequest) {
       if (!template) {
         return NextResponse.json(
           { error: `Exercise ${exercise.exerciseId} not found` },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
+      const sets = exercise.sets || 1;
+      const totalWork = sets * exercise.repsOrDuration;
+
       const xpEarned = Math.round(
-        exercise.repsOrDuration * template.baseXPValue * template.difficultyMultiplier
+        totalWork * template.baseXPValue * template.difficultyMultiplier,
       );
 
       workoutExercises.push({
@@ -96,8 +98,8 @@ export async function POST(req: NextRequest) {
 
     if (!progression) {
       return NextResponse.json(
-        { error: 'Progression not found' },
-        { status: 404 }
+        { error: "Progression not found" },
+        { status: 404 },
       );
     }
 
@@ -111,8 +113,9 @@ export async function POST(req: NextRequest) {
 
     if (newRank !== oldRank) {
       progression.currentRank = newRank;
-      progression.currentXP = progression.totalXPEarned - 
-        (await RankConfig.findOne({ rank: newRank }))?.xpRequired || 0;
+      progression.currentXP =
+        progression.totalXPEarned -
+          (await RankConfig.findOne({ rank: newRank }))?.xpRequired || 0;
 
       // Add to rank-up history
       progression.rankUpHistory.push({
@@ -127,15 +130,17 @@ export async function POST(req: NextRequest) {
     // Update streak
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const lastWorkout = progression.lastWorkoutDate
       ? new Date(progression.lastWorkoutDate)
       : null;
-    
+
     if (lastWorkout) {
       lastWorkout.setHours(0, 0, 0, 0);
-      const daysDiff = Math.floor((today.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60 * 24));
-      
+      const daysDiff = Math.floor(
+        (today.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60 * 24),
+      );
+
       if (daysDiff === 1) {
         progression.workoutStreak += 1;
       } else if (daysDiff > 1) {
@@ -158,12 +163,14 @@ export async function POST(req: NextRequest) {
         userId: session.user.id,
         exerciseId: exercise.exerciseId,
       });
+      const totalWork = exercise.sets * exercise.repsOrDuration;
 
       if (stats) {
-        stats.totalRepsOrDuration += exercise.repsOrDuration;
-        stats.personalBest = Math.max(stats.personalBest, exercise.repsOrDuration);
+        stats.totalRepsOrDuration += totalWork;
+        stats.personalBest = Math.max(stats.personalBest, totalWork);
         stats.timesCompleted += 1;
-        stats.averagePerSession = stats.totalRepsOrDuration / stats.timesCompleted;
+        stats.averagePerSession =
+          stats.totalRepsOrDuration / stats.timesCompleted;
         stats.lastCompleted = new Date();
         stats.totalXPFromExercise += exercise.xpEarned;
         await stats.save();
@@ -171,10 +178,10 @@ export async function POST(req: NextRequest) {
         await UserExerciseStats.create({
           userId: session.user.id,
           exerciseId: exercise.exerciseId,
-          totalRepsOrDuration: exercise.repsOrDuration,
-          personalBest: exercise.repsOrDuration,
+          totalRepsOrDuration: totalWork,
+          personalBest: totalWork,
           timesCompleted: 1,
-          averagePerSession: exercise.repsOrDuration,
+          averagePerSession: totalWork,
           firstCompleted: new Date(),
           lastCompleted: new Date(),
           totalXPFromExercise: exercise.xpEarned,
@@ -184,7 +191,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'Workout logged successfully',
+        message: "Workout logged successfully",
         workout: {
           id: workout._id,
           totalXPEarned,
@@ -193,13 +200,13 @@ export async function POST(req: NextRequest) {
           streak: progression.workoutStreak,
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: any) {
-    console.error('Workout logging error:', error);
+    console.error("Workout logging error:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to log workout' },
-      { status: 500 }
+      { error: error.message || "Failed to log workout" },
+      { status: 500 },
     );
   }
 }
@@ -209,15 +216,12 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
-    const limit = Math.min(50, parseInt(searchParams.get('limit') || '20'));
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const limit = Math.min(50, parseInt(searchParams.get("limit") || "20"));
     const skip = (page - 1) * limit;
 
     await connectDB();
@@ -246,13 +250,13 @@ export async function GET(req: NextRequest) {
           pages: Math.ceil(total / limit),
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error: any) {
-    console.error('Workout fetch error:', error);
+    console.error("Workout fetch error:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch workouts' },
-      { status: 500 }
+      { error: error.message || "Failed to fetch workouts" },
+      { status: 500 },
     );
   }
 }

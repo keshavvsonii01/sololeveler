@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { connectDB } from '@/lib/db';
-import { ExerciseTemplate } from '../../models/exerciseTemplate';
+import { authOptions } from '../../lib/auth';
+import { connectDB } from '../../lib/db';
+import { ExerciseTemplate } from '../../models/exercisetemplate';
+import { FlattenMaps } from 'mongoose';
 
 // GET all exercises (default + user's custom)
 export async function GET(req: NextRequest) {
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
       isCustom: false,
     }).lean();
 
-    let userExercises = [];
+    let userExercises: (FlattenMaps<any> & Required<{ _id: unknown; }> & { __v: number; })[] = [];
     if (session?.user?.id) {
       userExercises = await ExerciseTemplate.find({
         ...query,

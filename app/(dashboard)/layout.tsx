@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 // import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { Navbar } from '../components/navbar'
+import { authOptions } from "../lib/auth"
 
 export const metadata: Metadata = {
   title: "Shadow HUD - Dashboard",
@@ -14,15 +15,15 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-//   const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions)
 
-//   if (!session) {
-//     redirect('/auth/login')
-//   }
+  if (!session) {
+    redirect('/auth/login')
+  }
 
   return (
     <div className="min-h-screen bg-surface">
-      {/* <Navbar session={session} /> */}
+      <Navbar session={session} />
       <main className="pt-16">
         {children}
       </main>

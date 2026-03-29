@@ -13,7 +13,7 @@ export const Navbar: React.FC<NavbarProps> = ({ session }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-surface-low border-b border-outline-variant border-opacity-15 z-50">
+    <nav className="relative top-0 left-0 right-0 bg-brown border-b border-outline-variant border-opacity-15 z-100">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo/Brand */}
         <Link href="/dashboard" className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export const Navbar: React.FC<NavbarProps> = ({ session }) => {
                 className="flex items-center gap-2 px-4 py-2 rounded-none hover:bg-surface-high transition-colors"
               >
                 <span className="font-functional text-body-sm text-on-surface">
-                  {session.user.name || session.user.email}
+                  {session.user.username}
                 </span>
                 <span className="text-primary">▼</span>
               </button>

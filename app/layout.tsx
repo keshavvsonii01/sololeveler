@@ -1,16 +1,18 @@
-import type { Metadata } from "next"
-import "./globals.css"
+import type { Metadata } from "next";
+import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Shadow HUD - Solo Leveling Gym",
-  description: "Track your fitness journey through the ranks. E-Rank to S-Rank.",
+  description:
+    "Track your fitness journey through the ranks. E-Rank to S-Rank.",
   viewport: "width=device-width, initial-scale=1",
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -21,8 +23,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="bg-surface text-on-surface antialiased">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }

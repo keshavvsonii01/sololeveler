@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { connectDB } from '@/lib/db';
+import { authOptions } from '../../../lib/auth';
+import { connectDB } from '../../../lib/db';
 import { Progression } from '../../../models/progression';
 import { RankConfig } from '../../../models/rankconfig';
 import { getCurrentRankProgress, getRankByXP } from '../../../lib/xp-calculator';

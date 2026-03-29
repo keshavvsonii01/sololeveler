@@ -1,158 +1,206 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+
 @import "tailwindcss";
 
-/* Root Theme */
-html, body {
-  background-color: #131314; /* surface */
-  color: #ffffff; /* on-surface */
-  font-family: 'Manrope', sans-serif;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
+/* ═══════════════════════════════════════════════════════════════ */
+/* ROOT THEME */
+/* ═══════════════════════════════════════════════════════════════ */
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', monospace;
-}
+@layer base {
+  html,
+  body {
+    background-color: #0a0a0b;
+    color: #ffffff;
+    font-family: "Manrope", sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+  }
 
-/* Button Base */
-button {
-  transition: all 0.2s;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Space Grotesk", monospace;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
 
-button:active {
-  transform: scale(0.98);
-}
+  h1 {
+    font-size: 2.25rem;
+    animation: glow-cyan-pulse 2.5s ease-in-out infinite;
+    text-shadow:
+      0 0 30px rgba(0, 242, 255, 0.5),
+      0 0 60px rgba(0, 242, 255, 0.3);
+  }
 
-/* Input Base */
-input, textarea, select {
-  background: transparent;
+  h2 {
+    font-size: 1.875rem;
+    animation: glow-cyan-pulse 2s ease-in-out infinite;
+    text-shadow:
+      0 0 25px rgba(0, 242, 255, 0.4),
+      0 0 50px rgba(0, 242, 255, 0.2);
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    animation: glow-cyan-pulse 1.8s ease-in-out infinite;
+    text-shadow:
+      0 0 20px rgba(0, 242, 255, 0.3),
+      0 0 40px rgba(0, 242, 255, 0.15);
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1.25rem;
+    text-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+  }
+
+  button {
+    transition: all 0.3s;
+    font-family: "Space Grotesk", monospace;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  input,
+  textarea,
+  select {
+    background: transparent;
+    color: white;
+    outline: none;
+    transition: all 0.3s;
+    font-family: "Manrope", sans-serif;
+    border-bottom: 2px solid #2a2a2b;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-bottom-color: #00f2ff;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+  }
+
+  input::placeholder {
+    color: #6b7280;
+  }
+
+::selection {
+  background: rgba(0, 242, 255, 0.2);
   color: #ffffff;
-  font-family: 'Manrope', sans-serif;
-  outline: none;
-  border-bottom: 2px solid #3a3a3a;
+  text-shadow:
+    0 0 10px rgba(0, 242, 255, 0.9),
+    0 0 20px rgba(0, 242, 255, 0.7);
+}
 }
 
-input:focus, textarea:focus, select:focus {
-  border-bottom-color: #00F2FF;
-  box-shadow: 0 0 12px rgba(0, 242, 255, 0.3);
+/* ═══════════════════════════════════════════════════════════════ */
+/* COMPONENTS */
+/* ═══════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .surface-card {
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    background: linear-gradient(135deg, #0f0f10, #141415);
+    transition: all 0.3s;
+  }
+
+  .surface-card:hover {
+    border-color: rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+  }
+
+  .surface-card-elevated {
+    background: linear-gradient(135deg, #171718, #1d1d1e);
+    border: 1px solid rgba(0, 242, 255, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-panel {
+    background: rgba(15, 15, 16, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 242, 255, 0.15);
+  }
+
+  .card-hover {
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0, 242, 255, 0.15);
+  }
 }
 
-input::placeholder {
-  color: #a8a8a8;
+/* ═══════════════════════════════════════════════════════════════ */
+/* UTILITIES */
+/* ═══════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
 }
 
-/* Utility Classes */
-.surface-card {
-  background-color: #1c1b1c;
-  border-radius: 0;
-}
+/* ═══════════════════════════════════════════════════════════════ */
+/* SCROLLBAR */
+/* ═══════════════════════════════════════════════════════════════ */
 
-.surface-card-elevated {
-  background-color: #353436;
-  border-radius: 0;
-}
-
-.glass-panel {
-  background-color: rgba(28, 27, 28, 0.8);
-  backdrop-filter: blur(12px);
-  border-radius: 0;
-  border: 1px solid rgba(58, 58, 58, 0.15);
-}
-
-.bloom-glow {
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4), 0 0 40px rgba(119, 1, 208, 0.2);
-}
-
-.bloom-glow-lg {
-  box-shadow: 0 0 40px rgba(0, 242, 255, 0.6);
-}
-
-.bloom-glow-xl {
-  box-shadow: 0 0 60px rgba(0, 242, 255, 0.8);
-}
-
-.glow-cyan {
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-}
-
-.glow-purple {
-  box-shadow: 0 0 20px rgba(119, 1, 208, 0.4);
-}
-
-/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #131314;
+  background: #0a0a0b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #353436;
-  border-radius: 0;
+  background: linear-gradient(#00f2ff, #0088ff);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #00F2FF;
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+/* ═══════════════════════════════════════════════════════════════ */
+/* ANIMATIONS */
+/* ═══════════════════════════════════════════════════════════════ */
+
+@keyframes glow-cyan-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+  }
 }
 
-/* Selection */
-::selection {
-  background-color: #00F2FF;
-  color: #00363a;
-}
-
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-@keyframes slide-in-top {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
-}
-
-@keyframes slide-in-bottom {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-.animate-slide-in-top {
-  animation: slide-in-top 0.3s ease-out;
-}
-
-.animate-slide-in-bottom {
-  animation: slide-in-bottom 0.3s ease-out;
-}
-
-/* Grid Background */
-.grid-pattern {
-  background-image:
-    linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
 }

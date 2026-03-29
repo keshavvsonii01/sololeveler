@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from './button';
-import { Input } from './input';
-import { Alert } from './alert';
+import { useState } from "react";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Alert } from "./alert";
 
 interface Exercise {
   _id: string;
@@ -33,27 +33,36 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   onSubmit,
   isLoading = false,
 }) => {
-  const [selectedExercises, setSelectedExercises] = useState<WorkoutExerciseEntry[]>([]);
-  const [currentExerciseId, setCurrentExerciseId] = useState<string>('');
-  const [currentReps, setCurrentReps] = useState<string>('');
-  const [currentSets, setCurrentSets] = useState<string>('1');
-  const [currentWeight, setCurrentWeight] = useState<string>('');
-  const [currentNotes, setCurrentNotes] = useState<string>('');
-  const [workoutDate, setWorkoutDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [workoutNotes, setWorkoutNotes] = useState<string>('');
-  const [mood, setMood] = useState<string>('');
+  const [selectedExercises, setSelectedExercises] = useState<
+    WorkoutExerciseEntry[]
+  >([]);
+  const [currentExerciseId, setCurrentExerciseId] = useState<string>("");
+  const [currentReps, setCurrentReps] = useState<string>("");
+  const [currentSets, setCurrentSets] = useState<string>("1");
+  const [currentWeight, setCurrentWeight] = useState<string>("");
+  const [currentNotes, setCurrentNotes] = useState<string>("");
+  const [workoutDate, setWorkoutDate] = useState<string>(
+    new Date().toISOString().split("T")[0],
+  );
+  const [workoutNotes, setWorkoutNotes] = useState<string>("");
+  const [mood, setMood] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const calculateXP = (exerciseId: string, reps: number) => {
+  const selectedExercise = exercises.find((ex) => ex._id === currentExerciseId);
+
+  const calculateXP = (exerciseId: string, reps: number, sets: number) => {
     const exercise = exercises.find((ex) => ex._id === exerciseId);
     if (!exercise) return 0;
-    return Math.round(reps * exercise.baseXPValue * exercise.difficultyMultiplier);
+    return Math.round(
+      reps * sets * exercise.baseXPValue * exercise.difficultyMultiplier,
+    );
   };
 
   const handleAddExercise = () => {
     if (!currentExerciseId || !currentReps) {
-      setError('Please select an exercise and enter reps/duration');
+      setError("Please select an exercise and enter reps/duration");
       return;
     }
 
@@ -66,11 +75,11 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
     };
 
     setSelectedExercises([...selectedExercises, newEntry]);
-    setCurrentExerciseId('');
-    setCurrentReps('');
-    setCurrentSets('1');
-    setCurrentWeight('');
-    setCurrentNotes('');
+    setCurrentExerciseId("");
+    setCurrentReps("");
+    setCurrentSets("1");
+    setCurrentWeight("");
+    setCurrentNotes("");
     setError(null);
   };
 
@@ -83,7 +92,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
     setError(null);
 
     if (selectedExercises.length === 0) {
-      setError('Add at least one exercise');
+      setError("Add at least one exercise");
       return;
     }
 
@@ -97,22 +106,22 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       setSuccess(true);
       setTimeout(() => {
         setSelectedExercises([]);
-        setWorkoutDate(new Date().toISOString().split('T')[0]);
-        setWorkoutNotes('');
-        setMood('');
+        setWorkoutDate(new Date().toISOString().split("T")[0]);
+        setWorkoutNotes("");
+        setMood("");
         setSuccess(false);
       }, 2000);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('An unknown error occurred');
+        setError("An unknown error occurred");
       }
     }
   };
 
   const totalXP = selectedExercises.reduce((sum, ex) => {
-    return sum + calculateXP(ex.exerciseId, ex.repsOrDuration);
+    return sum + calculateXP(ex.exerciseId, ex.repsOrDuration, ex.sets || 1);
   }, 0);
 
   return (
@@ -148,7 +157,9 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
       {/* Exercise Selection */}
       <div className="surface-card p-6">
-        <h3 className="font-system text-title-md text-on-surface mb-6">ADD EXERCISES</h3>
+        <h3 className="font-system text-title-md text-on-surface mb-6">
+          ADD EXERCISES
+        </h3>
 
         <div className="space-y-4 mb-6">
           {/* Exercise selector */}
@@ -160,11 +171,15 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
               value={currentExerciseId}
               onChange={(e) => setCurrentExerciseId(e.target.value)}
               disabled={isLoading}
-              className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed p-2"
+              className="w-full text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed p-2"
             >
-              <option value="">Choose an exercise...</option>
+              <option className="text-black" value="">Choose an exercise...</option>
               {exercises.map((ex) => (
-                <option key={ex._id} value={ex._id}>
+                <option
+                  key={ex._id}
+                  className="text-black"
+                  value={ex._id}
+                >
                   {ex.name} ({ex.category})
                 </option>
               ))}
@@ -234,11 +249,17 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         {/* Added exercises list */}
         {selectedExercises.length > 0 && (
           <div className="border-t border-outline-variant border-opacity-15 pt-6">
-            <h4 className="font-system text-title-sm text-on-surface mb-4">ADDED EXERCISES</h4>
+            <h4 className="font-system text-title-sm text-on-surface mb-4">
+              ADDED EXERCISES
+            </h4>
             <div className="space-y-3">
               {selectedExercises.map((ex, index) => {
                 const exercise = exercises.find((e) => e._id === ex.exerciseId);
-                const xp = calculateXP(ex.exerciseId, ex.repsOrDuration);
+                const xp = calculateXP(
+                  ex.exerciseId,
+                  ex.repsOrDuration,
+                  ex.sets || 1,
+                );
 
                 return (
                   <div
@@ -255,7 +276,9 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
                       </p>
                     </div>
                     <div className="text-right mr-4">
-                      <p className="font-system text-title-sm text-secondary">+{xp} XP</p>
+                      <p className="font-system text-title-sm text-secondary">
+                        +{xp} XP
+                      </p>
                     </div>
                     <button
                       type="button"
@@ -285,11 +308,11 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             disabled={isLoading}
             className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed p-2"
           >
-            <option value="">Select mood...</option>
-            <option value="excellent">Excellent</option>
-            <option value="good">Good</option>
-            <option value="okay">Okay</option>
-            <option value="poor">Poor</option>
+            <option className="text-black" value="">Select mood...</option>
+            <option className="text-black" value="excellent">Excellent</option>
+            <option className="text-black" value="good">Good</option>
+            <option className="text-black" value="okay">Okay</option>
+            <option className="text-black" value="poor">Poor</option>
           </select>
         </div>
 
@@ -313,14 +336,20 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         <div className="surface-card p-6 border-l-4 border-primary">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-label-md text-on-surface-variant mb-2">WORKOUT SUMMARY</p>
+              <p className="text-label-md text-on-surface-variant mb-2">
+                WORKOUT SUMMARY
+              </p>
               <p className="font-system text-title-md text-on-surface">
                 {selectedExercises.length} exercises
               </p>
             </div>
             <div className="text-right">
-              <p className="text-label-md text-on-surface-variant mb-2">TOTAL XP</p>
-              <p className="font-system text-display-sm text-secondary">+{totalXP}</p>
+              <p className="text-label-md text-on-surface-variant mb-2">
+                TOTAL XP
+              </p>
+              <p className="font-system text-display-sm text-secondary">
+                +{totalXP}
+              </p>
             </div>
           </div>
         </div>
@@ -335,7 +364,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         disabled={isLoading || selectedExercises.length === 0}
         className="w-full"
       >
-        {isLoading ? 'Logging Workout...' : 'Log Workout'}
+        {isLoading ? "Logging Workout..." : "Log Workout"}
       </Button>
     </form>
   );

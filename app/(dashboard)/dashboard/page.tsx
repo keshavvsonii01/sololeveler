@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Button } from '../components/button';
-import { RankBadge } from '../components/rank-badge';
-import { XPProgressBar } from '../components/xp-progress-bar';
+import { Button } from '../../components/button';
+import { RankBadge } from '../../components/rank-badge';
+import { XPProgressBar } from '../../components/xp-progress-bar';
 import Link from 'next/link';
 
 interface ProgressionData {
-  progression: any;
-  currentRankConfig: any;
-  allRanks: any[];
+  progression: unknown;
+  currentRankConfig: unknown;
+  allRanks: unknown[];
 }
 
 export default function DashboardPage() {
@@ -53,8 +53,8 @@ export default function DashboardPage() {
     );
   }
 
-  const prog = progressionData?.progression;
-  const rankConfig = progressionData?.currentRankConfig;
+  const prog = progressionData?.progression as { [key: string]: any } | undefined;
+  const rankConfig = progressionData?.currentRankConfig as { [key: string]: any } | undefined;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -175,17 +175,17 @@ export default function DashboardPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <p className="text-label-md text-on-surface-variant mb-2">PROGRESS TO NEXT RANK</p>
-              <p className="text-body-md text-on-surface font-functional">
+              <p className="text-label-sm text-on-surface font-functional" style={{ color: rankConfig.color }}>
                 {prog.xpToNextRank.toLocaleString()} XP required
               </p>
-              <p className="text-label-sm text-on-surface-variant mt-2">
+              <p className="text-label-sm text-on-surface-variant mt-2" style={{ color: rankConfig.color }}>
                 At {prog.progressPercent.toFixed(1)}% completion
               </p>
             </div>
-            <div className="text-right">
+            <div className="">
               <p className="text-label-md text-on-surface-variant mb-2">CURRENT / REQUIRED</p>
               <p className="font-system text-title-md" style={{ color: rankConfig.color }}>
-                {prog.currentXP.toLocaleString()} / {(prog.currentXP + prog.xpToNextRank).toLocaleString()}
+                {prog.currentXP.toLocaleString()} / {( prog.xpToNextRank).toLocaleString()}
               </p>
             </div>
           </div>

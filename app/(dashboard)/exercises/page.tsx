@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { Button } from '../../components/button';
-import { Alert } from '../../components/alert';
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { Button } from "../../components/button";
+import { Alert } from "../../components/alert";
 
 interface Exercise {
   _id: string;
@@ -25,43 +25,43 @@ interface ExerciseStats {
 }
 
 const categoryEmoji: Record<string, string> = {
-  strength: '💪',
-  cardio: '🏃',
-  flexibility: '🧘',
-  sports: '⚽',
-  other: '🏋️',
+  strength: "💪",
+  cardio: "🏃",
+  flexibility: "🧘",
+  sports: "⚽",
+  other: "🏋️",
 };
 
 export default function ExercisesPage() {
   const { data: session } = useSession();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [stats, setStats] = useState<ExerciseStats[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newExercise, setNewExercise] = useState({
-    name: '',
-    category: 'strength',
+    name: "",
+    category: "strength",
     baseXPValue: 10,
     difficultyMultiplier: 1.0,
-    unit: 'reps',
-    description: '',
+    unit: "reps",
+    description: "",
   });
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/exercises');
-        if (!response.ok) throw new Error('Failed to fetch exercises');
+        const response = await fetch("/api/exercises");
+        if (!response.ok) throw new Error("Failed to fetch exercises");
         const data = await response.json();
         setExercises(data.exercises);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError('An unknown error occurred');
+          setError("An unknown error occurred");
         }
       } finally {
         setIsLoading(false);
@@ -78,9 +78,9 @@ export default function ExercisesPage() {
     setIsCreating(true);
 
     try {
-      const response = await fetch('/api/exercises', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/exercises", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newExercise),
       });
 
@@ -92,19 +92,19 @@ export default function ExercisesPage() {
       const data = await response.json();
       setExercises([...exercises, data.exercise]);
       setNewExercise({
-        name: '',
-        category: 'strength',
+        name: "",
+        category: "strength",
         baseXPValue: 10,
         difficultyMultiplier: 1.0,
-        unit: 'reps',
-        description: '',
+        unit: "reps",
+        description: "",
       });
       setShowCreateForm(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('An unknown error occurred');
+        setError("An unknown error occurred");
       }
     } finally {
       setIsCreating(false);
@@ -122,7 +122,9 @@ export default function ExercisesPage() {
       <div className="h-96 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-on-surface-variant font-functional">Loading exercises...</p>
+          <p className="text-on-surface-variant font-functional">
+            Loading exercises...
+          </p>
         </div>
       </div>
     );
@@ -133,7 +135,9 @@ export default function ExercisesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
         <div>
-          <h1 className="font-system text-display-md text-primary mb-2">EXERCISE_LIBRARY</h1>
+          <h1 className="font-system text-display-md text-primary mb-2">
+            EXERCISE_LIBRARY
+          </h1>
           <p className="text-on-surface-variant font-functional text-body-md">
             {filteredExercises.length} exercises available
           </p>
@@ -143,7 +147,7 @@ export default function ExercisesPage() {
           size="lg"
           onClick={() => setShowCreateForm(!showCreateForm)}
         >
-          {showCreateForm ? 'Cancel' : 'Create Custom Exercise'}
+          {showCreateForm ? "Cancel" : "Create Custom Exercise"}
         </Button>
       </div>
 
@@ -159,7 +163,9 @@ export default function ExercisesPage() {
       {/* Create Exercise Form */}
       {showCreateForm && (
         <div className="surface-card p-8 mb-12">
-          <h2 className="font-system text-title-lg text-on-surface mb-6">CREATE_CUSTOM_EXERCISE</h2>
+          <h2 className="font-system text-title-lg text-on-surface mb-6">
+            CREATE_CUSTOM_EXERCISE
+          </h2>
           <form onSubmit={handleCreateExercise} className="space-y-6">
             <div>
               <label className="block text-label-md text-on-surface-variant mb-2 uppercase">
@@ -169,7 +175,9 @@ export default function ExercisesPage() {
                 type="text"
                 required
                 value={newExercise.name}
-                onChange={(e) => setNewExercise({ ...newExercise, name: e.target.value })}
+                onChange={(e) =>
+                  setNewExercise({ ...newExercise, name: e.target.value })
+                }
                 disabled={isCreating}
                 className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 p-2"
                 placeholder="e.g., Muscle-ups"
@@ -183,7 +191,9 @@ export default function ExercisesPage() {
                 </label>
                 <select
                   value={newExercise.category}
-                  onChange={(e) => setNewExercise({ ...newExercise, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewExercise({ ...newExercise, category: e.target.value })
+                  }
                   disabled={isCreating}
                   className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary p-2"
                 >
@@ -201,7 +211,9 @@ export default function ExercisesPage() {
                 </label>
                 <select
                   value={newExercise.unit}
-                  onChange={(e) => setNewExercise({ ...newExercise, unit: e.target.value })}
+                  onChange={(e) =>
+                    setNewExercise({ ...newExercise, unit: e.target.value })
+                  }
                   disabled={isCreating}
                   className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary p-2"
                 >
@@ -223,7 +235,10 @@ export default function ExercisesPage() {
                   min="1"
                   value={newExercise.baseXPValue}
                   onChange={(e) =>
-                    setNewExercise({ ...newExercise, baseXPValue: parseInt(e.target.value) })
+                    setNewExercise({
+                      ...newExercise,
+                      baseXPValue: parseInt(e.target.value),
+                    })
                   }
                   disabled={isCreating}
                   className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 p-2"
@@ -242,7 +257,10 @@ export default function ExercisesPage() {
                   step="0.1"
                   value={newExercise.difficultyMultiplier}
                   onChange={(e) =>
-                    setNewExercise({ ...newExercise, difficultyMultiplier: parseFloat(e.target.value) })
+                    setNewExercise({
+                      ...newExercise,
+                      difficultyMultiplier: parseFloat(e.target.value),
+                    })
                   }
                   disabled={isCreating}
                   className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 p-2"
@@ -256,7 +274,12 @@ export default function ExercisesPage() {
               </label>
               <textarea
                 value={newExercise.description}
-                onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
+                onChange={(e) =>
+                  setNewExercise({
+                    ...newExercise,
+                    description: e.target.value,
+                  })
+                }
                 disabled={isCreating}
                 className="w-full bg-transparent text-on-surface font-functional focus:outline-none border-b-2 border-outline-variant transition-colors duration-200 focus:border-primary focus:shadow-[0_0_12px_rgba(0,242,255,0.3)] disabled:opacity-50 p-2"
                 placeholder="Describe your custom exercise"
@@ -282,11 +305,11 @@ export default function ExercisesPage() {
       {categories.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
           <button
-            onClick={() => setSelectedCategory('')}
+            onClick={() => setSelectedCategory("")}
             className={`px-4 py-2 rounded-none font-system transition-all ${
-              selectedCategory === ''
-                ? 'bg-primary text-primary-dark'
-                : 'border border-outline-variant text-on-surface hover:border-primary'
+              selectedCategory === ""
+                ? "bg-primary text-primary-dark"
+                : "border border-outline-variant text-on-surface hover:border-primary"
             }`}
           >
             All
@@ -297,8 +320,8 @@ export default function ExercisesPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-none font-system transition-all ${
                 selectedCategory === cat
-                  ? 'bg-primary text-primary-dark'
-                  : 'border border-outline-variant text-on-surface hover:border-primary'
+                  ? "bg-primary text-primary-dark"
+                  : "border border-outline-variant text-on-surface hover:border-primary"
               }`}
             >
               {categoryEmoji[cat]} {cat}
@@ -311,7 +334,9 @@ export default function ExercisesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredExercises.map((exercise) => {
           const baseXP = exercise.baseXPValue;
-          const multipliedXP = Math.round(baseXP * exercise.difficultyMultiplier);
+          const multipliedXP = Math.round(
+            baseXP * exercise.difficultyMultiplier,
+          );
 
           return (
             <div
@@ -320,7 +345,9 @@ export default function ExercisesPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-system text-title-md text-on-surface">{exercise.name}</h3>
+                  <h3 className="font-system text-title-md text-on-surface">
+                    {exercise.name}
+                  </h3>
                   <p className="text-label-sm text-on-surface-variant mt-1">
                     {categoryEmoji[exercise.category]} {exercise.category}
                   </p>
@@ -333,28 +360,44 @@ export default function ExercisesPage() {
               </div>
 
               {exercise.description && (
-                <p className="text-body-sm text-on-surface-variant mb-4">{exercise.description}</p>
+                <p className="text-body-sm text-on-surface-variant mb-4">
+                  {exercise.description}
+                </p>
               )}
 
               <div className="border-t border-outline-variant border-opacity-15 pt-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <p className="text-label-sm text-on-surface-variant">Unit</p>
-                  <p className="font-system text-body-sm text-on-surface">{exercise.unit}</p>
+                  <p className="font-system text-body-sm text-on-surface">
+                    {exercise.unit}
+                  </p>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <p className="text-label-sm text-on-surface-variant">Base XP</p>
-                  <p className="font-system text-body-sm text-primary">{baseXP}</p>
+                  <p className="text-label-sm text-on-surface-variant">
+                    Base XP
+                  </p>
+                  <p className="font-system text-body-sm text-primary">
+                    {baseXP}
+                  </p>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <p className="text-label-sm text-on-surface-variant">Multiplier</p>
-                  <p className="font-system text-body-sm text-secondary">{exercise.difficultyMultiplier}x</p>
+                  <p className="text-label-sm text-on-surface-variant">
+                    Multiplier
+                  </p>
+                  <p className="font-system text-body-sm text-secondary">
+                    {exercise.difficultyMultiplier}x
+                  </p>
                 </div>
 
-                <div className="flex items-center justify-between bg-surface-high p-2 rounded-none">
-                  <p className="text-label-sm text-on-surface-variant">Per Unit</p>
-                  <p className="font-system text-title-sm text-primary">+{multipliedXP} XP</p>
+                <div className="flex items-center justify-between bg-surface-high rounded-none">
+                  <p className="text-label-sm text-on-surface-variant">
+                    Per Unit
+                  </p>
+                  <p className="font-system text-title-sm text-primary">
+                    +{multipliedXP} XP
+                  </p>
                 </div>
               </div>
             </div>
@@ -364,7 +407,9 @@ export default function ExercisesPage() {
 
       {filteredExercises.length === 0 && (
         <div className="surface-card p-12 text-center">
-          <p className="text-on-surface-variant font-functional">No exercises found in this category.</p>
+          <p className="text-on-surface-variant font-functional">
+            No exercises found in this category.
+          </p>
         </div>
       )}
     </div>
