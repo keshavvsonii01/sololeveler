@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { WorkoutLogger } from '../../../components/workout-logger';
+import { TemplateSelector } from '../../../components/template-selector';
 import { Alert } from '../../../components/alert';
 
 interface Exercise {
@@ -15,10 +16,24 @@ interface Exercise {
   difficultyMultiplier: number;
 }
 
+interface WorkoutTemplate {
+  _id: string;
+  name: string;
+  exercises: Array<{
+    exerciseId: string;
+    exerciseName: string;
+    sets: number;
+    reps: number;
+    weight?: number;
+    notes?: string;
+  }>;
+}
+
 export default function LogWorkoutPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<WorkoutTemplate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -109,17 +124,25 @@ export default function LogWorkoutPage() {
         </div>
       )}
 
+      {/* Template Selector */}
+      <TemplateSelector
+        onSelectTemplate={setSelectedTemplate}
+        isLoading={isSubmitting}
+      />
+
       {/* Workout Logger */}
-      <div className="surface-card p-8">
+      <div className="surface-card p-8 mb-12">
         <WorkoutLogger
           exercises={exercises}
           onSubmit={handleLogWorkout}
           isLoading={isSubmitting}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
         />
       </div>
 
       {/* Quick Tips */}
-      <div className="mt-12 surface-card p-8">
+      <div className="surface-card p-8">
         <h2 className="font-system text-title-lg text-on-surface mb-6">SYSTEM_TIPS</h2>
         <div className="space-y-4 text-body-sm text-on-surface-variant font-functional">
           <p>
@@ -133,6 +156,9 @@ export default function LogWorkoutPage() {
           </p>
           <p>
             🔥 <span className="text-on-surface">Consistency is key.</span> Daily workouts build your streak and power.
+          </p>
+          <p>
+            ⭐ <span className="text-on-surface">Use templates.</span> Save time by using workout templates or guided programs.
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button } from '../../components/button';
+import { RegimeBrowser } from '../../components/regime-browser';
 import Link from 'next/link';
 import { formatDate } from '../../lib/utils';
 
@@ -37,6 +38,7 @@ export default function WorkoutsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [showRegimes, setShowRegimes] = useState(false);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -85,9 +87,9 @@ export default function WorkoutsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-6 mb-12">
         <div>
-          <h1 className="font-system text-display-md text-primary mb-2">WORKOUT_HISTORY</h1>
+          <h1 className="font-system text-display-md text-primary mb-2">WORKOUT_HUB</h1>
           <p className="text-on-surface-variant font-functional text-body-md">
-            {pagination?.total || 0} workouts logged
+            {pagination?.total || 0} workouts logged • Manage your fitness journey
           </p>
         </div>
         <Link href="/workouts/new">
@@ -103,129 +105,175 @@ export default function WorkoutsPage() {
         </div>
       )}
 
-      {workouts.length === 0 ? (
-        <div className="surface-card p-12 text-center">
-          <p className="text-on-surface-variant font-functional text-body-md mb-6">
-            No workouts logged yet. Time to start your journey!
-          </p>
-          <Link href="/workouts/new">
-            <Button variant="primary" size="lg">
-              Log Your First Workout
-            </Button>
-          </Link>
-        </div>
-      ) : (
-        <>
-          {/* Workouts List */}
-          <div className="space-y-6 mb-12">
-            {workouts.map((workout) => (
-              <div
-                key={workout._id}
-                className="surface-card p-6 border-l-4 border-primary hover:bg-surface-low transition-colors"
-              >
-                {/* Workout Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-system text-title-md text-on-surface">
-                        {formatDate(new Date(workout.date))}
-                      </h3>
-                      {workout.mood && (
-                        <span className="text-2xl">{moodEmoji[workout.mood] || '🏋️'}</span>
-                      )}
-                      {workout.isRankedUp && (
-                        <span className="bg-primary bg-opacity-20 text-primary px-2 py-1 rounded-none text-label-sm font-system">
-                          RANK UP!
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-on-surface-variant text-body-sm">
-                      {workout.totalExercises} exercises • {workout.totalXPEarned} XP earned
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-on-surface-variant text-label-md mb-1">XP GAINED</p>
-                    <p className="font-system text-headline-md text-secondary">
-                      +{workout.totalXPEarned}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Exercises List */}
-                <div className="border-t border-outline-variant border-opacity-15 pt-6">
-                  <p className="text-label-md text-on-surface-variant mb-4 uppercase">
-                    Exercises ({workout.totalExercises})
-                  </p>
-                  <div className="space-y-3">
-                    {workout.exercises.map((ex, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-3 bg-surface-high rounded-none text-sm"
-                      >
-                        <div className="flex-1">
-                          <p className="font-system text-on-surface">{ex.exerciseName}</p>
-                          <p className="text-label-sm text-on-surface-variant">
-                            {ex.repsOrDuration} {ex.sets > 1 ? `× ${ex.sets} sets` : ''}
-                            {ex.weight && ` @ ${ex.weight}kg`}
-                          </p>
-                        </div>
-                        <p className="font-system text-secondary">+{ex.xpEarned} XP</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Workout Notes */}
-                {workout.notes && (
-                  <div className="border-t border-outline-variant border-opacity-15 pt-6 mt-6">
-                    <p className="text-label-md text-on-surface-variant mb-2">NOTES</p>
-                    <p className="text-body-sm text-on-surface">{workout.notes}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+        <Link href="/workouts/new">
+          <div className="surface-card p-6 border-l-4 border-primary hover:border-secondary transition-all cursor-pointer card-hover">
+            <p className="font-system text-title-sm text-primary mb-2">🎯 Quick Log</p>
+            <p className="text-label-sm text-on-surface-variant">Log a workout from scratch</p>
           </div>
+        </Link>
 
-          {/* Pagination */}
-          {pagination && pagination.pages > 1 && (
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={() => setPage(Math.max(1, page - 1))}
-                disabled={page === 1}
-              >
-                ← Previous
-              </Button>
+        <Link href="/workouts/templates">
+          <div className="surface-card p-6 border-l-4 border-secondary hover:border-primary transition-all cursor-pointer card-hover">
+            <p className="font-system text-title-sm text-secondary mb-2">⭐ Templates</p>
+            <p className="text-label-sm text-on-surface-variant">Create and manage templates</p>
+          </div>
+        </Link>
 
-              <div className="flex items-center gap-2">
-                {Array.from({ length: pagination.pages }).map((_, idx) => (
-                  <button
-                    key={idx + 1}
-                    onClick={() => setPage(idx + 1)}
-                    className={`w-10 h-10 rounded-none font-system transition-all ${
-                      page === idx + 1
-                        ? 'bg-primary text-primary-dark'
-                        : 'border border-outline-variant text-on-surface hover:border-primary'
-                    }`}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
+        <button
+          onClick={() => setShowRegimes(!showRegimes)}
+          className="surface-card p-6 border-l-4 border-yellow-500 hover:border-primary transition-all cursor-pointer card-hover text-left"
+        >
+          <p className="font-system text-title-sm text-on-surface mb-2">📖 Guided Programs</p>
+          <p className="text-label-sm text-on-surface-variant">Browse 4-week training programs</p>
+        </button>
+      </div>
 
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={() => setPage(Math.min(pagination.pages, page + 1))}
-                disabled={page === pagination.pages}
-              >
-                Next →
-              </Button>
-            </div>
-          )}
-        </>
+      {/* Guided Programs Section */}
+      {showRegimes && (
+        <div className="mb-12">
+          <RegimeBrowser
+            onStartRegime={() => {
+              setShowRegimes(false);
+            }}
+          />
+        </div>
       )}
+
+      {/* Workout History Section */}
+      <div className="mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-system text-title-lg text-on-surface">WORKOUT_HISTORY</h2>
+          {workouts.length === 0 && (
+            <p className="text-label-sm text-on-surface-variant">Get started with your first workout!</p>
+          )}
+        </div>
+
+        {workouts.length === 0 ? (
+          <div className="surface-card p-12 text-center">
+            <p className="text-on-surface-variant font-functional text-body-md mb-6">
+              No workouts logged yet. Time to start your journey!
+            </p>
+            <Link href="/workouts/new">
+              <Button variant="primary" size="lg">
+                Log Your First Workout
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Workouts List */}
+            <div className="space-y-6 mb-12">
+              {workouts.map((workout) => (
+                <div
+                  key={workout._id}
+                  className="surface-card p-6 border-l-4 border-primary hover:bg-surface-low transition-colors"
+                >
+                  {/* Workout Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-system text-title-md text-on-surface">
+                          {formatDate(new Date(workout.date))}
+                        </h3>
+                        {workout.mood && (
+                          <span className="text-2xl">{moodEmoji[workout.mood] || '🏋️'}</span>
+                        )}
+                        {workout.isRankedUp && (
+                          <span className="bg-primary bg-opacity-20 text-primary px-2 py-1 rounded-none text-label-sm font-system">
+                            RANK UP!
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-on-surface-variant text-body-sm">
+                        {workout.totalExercises} exercises • {workout.totalXPEarned} XP earned
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-on-surface-variant text-label-md mb-1">XP GAINED</p>
+                      <p className="font-system text-headline-md text-secondary">
+                        +{workout.totalXPEarned}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Exercises List */}
+                  <div className="border-t border-outline-variant border-opacity-15 pt-6">
+                    <p className="text-label-md text-on-surface-variant mb-4 uppercase">
+                      Exercises ({workout.totalExercises})
+                    </p>
+                    <div className="space-y-3">
+                      {workout.exercises.map((ex, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between p-3 bg-surface-high rounded-none text-sm"
+                        >
+                          <div className="flex-1">
+                            <p className="font-system text-on-surface">{ex.exerciseName}</p>
+                            <p className="text-label-sm text-on-surface-variant">
+                              {ex.repsOrDuration} {ex.sets > 1 ? `× ${ex.sets} sets` : ''}
+                              {ex.weight && ` @ ${ex.weight}kg`}
+                            </p>
+                          </div>
+                          <p className="font-system text-secondary">+{ex.xpEarned} XP</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Workout Notes */}
+                  {workout.notes && (
+                    <div className="border-t border-outline-variant border-opacity-15 pt-6 mt-6">
+                      <p className="text-label-md text-on-surface-variant mb-2">NOTES</p>
+                      <p className="text-body-sm text-on-surface">{workout.notes}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {pagination && pagination.pages > 1 && (
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                >
+                  ← Previous
+                </Button>
+
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: pagination.pages }).map((_, idx) => (
+                    <button
+                      key={idx + 1}
+                      onClick={() => setPage(idx + 1)}
+                      className={`w-10 h-10 rounded-none font-system transition-all ${
+                        page === idx + 1
+                          ? 'bg-primary text-primary-dark'
+                          : 'border border-outline-variant text-on-surface hover:border-primary'
+                      }`}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setPage(Math.min(pagination.pages, page + 1))}
+                  disabled={page === pagination.pages}
+                >
+                  Next →
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* System Status */}
       <div className="mt-12 text-center text-on-surface-variant text-label-sm">

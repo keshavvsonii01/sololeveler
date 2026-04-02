@@ -142,13 +142,22 @@ export default function ExercisesPage() {
             {filteredExercises.length} exercises available
           </p>
         </div>
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={() => setShowCreateForm(!showCreateForm)}
-        >
-          {showCreateForm ? "Cancel" : "Create Custom Exercise"}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={() => window.location.href = '/workouts/templates'}
+          >
+            + Create Template
+          </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => setShowCreateForm(!showCreateForm)}
+          >
+            {showCreateForm ? "Cancel" : "Create Custom Exercise"}
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -391,7 +400,7 @@ export default function ExercisesPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between bg-surface-high rounded-none">
+                <div className="flex items-center justify-between bg-surface-high rounded-none p-2">
                   <p className="text-label-sm text-on-surface-variant">
                     Per Unit
                   </p>

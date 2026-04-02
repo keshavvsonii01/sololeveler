@@ -128,7 +128,7 @@ export default function LoginPage() {
           <div className="mt-8 space-y-4 text-center">
             <p className="text-on-surface-variant text-body-sm">
               No access yet?{' '}
-              <Link href="/auth/register" className="text-primary hover:underline">
+              <Link href="/register" className="text-primary hover:underline">
                 Initialize new profile
               </Link>
             </p>
