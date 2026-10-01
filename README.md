@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SoloLeveler
 
-## Getting Started
+> An interactive, gamified fitness experience inspired by the Solo Leveling universe.
 
-First, run the development server:
+SoloLeveler is a fitness-focused web application that turns workouts and personal progress into an interactive leveling experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The project combines fitness tracking, progression mechanics, and an anime-inspired interface to make working out feel more engaging and rewarding.
+
+## ✨ Features
+
+- 🏋️ **Workout Experience**
+  - Track and interact with fitness-focused activities.
+  - Designed around making regular workouts more engaging.
+
+- ⚔️ **Gamified Progression**
+  - Progress through a leveling-inspired experience.
+  - Built around the idea of improving your stats and becoming stronger over time.
+
+- 📈 **Progress Tracking**
+  - Visualize personal progress through an interactive interface.
+  - Designed to make consistency and improvement more motivating.
+
+- 🎮 **Interactive UI**
+  - Anime-inspired visual experience.
+  - Interactive elements designed around the Solo Leveling theme.
+
+- 🧩 **Product-focused Experience**
+  - Combines fitness, gamification, and interactive web design into a single application.
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js
+- **Language:** TypeScript
+- **Frontend:** React / Next.js
+- **Styling:** CSS
+- **UI:** Interactive and animated components
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have Node.js and npm installed on your machine.
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/keshavvsonii01/sololeveler.git
+   cd sololeveler
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## ⚙️ Environment Variables
+
+If the application requires environment variables, create a `.env.local` file in the root directory and add the required configuration:
+
+```env
+# Add required environment variables here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> **Note:** Never commit API keys, credentials, or other sensitive information to the repository.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎯 Project Vision
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The idea behind SoloLeveler is to make fitness feel less like a routine and more like a progression system.
 
-## Learn More
+Instead of simply completing workouts, the experience is designed around the feeling of:
 
-To learn more about Next.js, take a look at the following resources:
+```
+Train → Complete → Progress → Level Up
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project explores how gamification and interactive interfaces can make fitness applications more engaging.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Project Status
 
-## Deploy on Vercel
+🚧 **Active Development — ~80–90% Complete**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The core experience and major functionality are implemented, with additional features, refinements, and UI improvements still in development.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔮 Future Improvements
+
+- Complete remaining application features
+- Refine animations and interactions
+- Improve mobile responsiveness
+- Expand progression and leveling mechanics
+- Add more fitness and workout functionality
+- Improve progress visualization
+- Further polish the overall user experience
+
+## 👨‍💻 Author
+
+**Keshav Soni**  
+*Software Engineer · Full Stack · AI*
+
+I build full-stack web applications, backend systems, and AI-powered products.
+
+- 🌐 **Portfolio:** [keshavsoni.vercel.app](https://keshavsoni.vercel.app)
+- 💼 **LinkedIn:** [keshavvsoni01](https://linkedin.com/in/keshavvsoni01)
+- 🐙 **GitHub:** [keshavvsonii01](https://github.com/keshavvsonii01)
+
+⭐ If you find SoloLeveler interesting, consider giving the repository a star!
+
+---
+
+### 📌 GitHub Repository Settings
+
+* **Repository Description:**
+  > Gamified fitness experience inspired by Solo Leveling, built with Next.js and TypeScript.
+
+* **Repository Topics:**  
+  `nextjs`, `typescript`, `react`, `fitness`, `gamification`, `web-app`, `interactive-ui`, `anime`, `solo-leveling`, `frontend`
